@@ -102,3 +102,18 @@ sys_trace(void)
   myproc()->mascara = mask;
   return 0;
 }
+
+uint64
+sys_info(void)
+{
+  uint64 addr;
+  argaddr(0, &addr);
+  struct proc *p = myproc();
+  struct sysinfo sinfo;
+
+  sinfo.freemem = get_freemem();
+  sinfo.nproc = get_nproc();
+  if(copyout(p->pagetable,(uint64)addr,(char*)&sinfo,sizeof(struct sysinfo))<0) 
+  	return -1;
+  return 0;
+}
